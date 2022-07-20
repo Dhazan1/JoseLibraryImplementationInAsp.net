@@ -1,0 +1,33 @@
+     var payload = new Dictionary<string, object>()
+                        {
+                         { "ref" ,"1234567890"},
+                         { "date", "1234" }
+                        };
+
+            JweEncryption encryption = JweEncryption.A256GCM;
+            JweAlgorithm algo = JweAlgorithm.ECDH_ES;
+            string crv = "P-256";
+            string x = "UbInEqNbZZZ9SJptBwKTKO6qslSyuWvMkVK44Bx_d8U";
+            string y = "PUxeHMNVL0VRxOYJrkHcpe6sap7IG-Are0QborZDngI";
+            string kid = "ASDsL-Jx2XOkRnFtqW-QblWY-mDnQW2LgapadFx75tA";
+            var keys = new Jwk(crv: crv, x: x, y: y, d: kid);
+
+            //trying to figure out how encrypting works
+            var rec = new List<JweRecipient> { new JweRecipient(algo, keys) };         
+            var plain = JsonConvert.SerializeObject(payload);
+            var encryptedData = JWE.Encrypt(plain, rec, encryption);
+            var encryptedData2 = JWE.Encrypt(plain, rec, encryption, mode: SerializationMode.Compact);
+
+            Console.WriteLine(encryptedData);
+            Console.WriteLine(encryptedData2);
+            //encryption working
+
+
+       
+             //decryption not working
+              var decryptedDataTest1 = JWE.Decrypt(encryptedData2, keys,algo, encryption);
+              var decryptedDataTest2 = JWE.Decrypt(encryptedData, keys, algo, encryption);
+
+
+            Console.WriteLine(decryptedDataTest1);
+            Console.WriteLine(decryptedDataTest2);
